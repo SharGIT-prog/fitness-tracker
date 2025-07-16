@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>📉 Weight Graph</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body style="background-color: black; color: white; padding: 40px;">
+    <h2>📈 Your Weight Progress</h2>
+
+    <form id="emailForm">
+        <input type="email" id="emailInput" placeholder="Enter your email" required>
+        <button type="submit">Show Graph</button>
+    </form>
+
+    <canvas id="weightChart" width="600" height="300" style="margin-top: 20px;"></canvas>
+
+    <script>
+        document.getElementById('emailForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const email = document.getElementById('emailInput').value;
+
+            const response = await fetch(`/weight-data/?email=${email}`);
+            const data = await response.json();
+
+            if (data.error) {
+                alert(data.error);
+                return;
+            }
+
+            const ctx = document.getElementById('weightChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: data.dates,
+                    datasets: [{
+                        label: 'Weight (kg)',
+                        data: data.weights,
+                        borderColor: 'lime',
+                        backgroundColor: 'rgba(0,255,0,0.2)',
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Date' }
+                        },
+                        y: {
+                            title: { display: true, text: 'Weight (kg)' },
+                            beginAtZero: false
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: { color: 'white' }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

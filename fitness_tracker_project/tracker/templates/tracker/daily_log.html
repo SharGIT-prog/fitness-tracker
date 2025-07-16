@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Daily Log</title>
+    <link rel="stylesheet" href="{% static 'tracker/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h2>📆 Daily Fitness Log</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Submit Log</button>
+        </form>
+    </div>
+</body>
+</html>
